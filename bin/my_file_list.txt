@@ -1,0 +1,5 @@
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/AR0.SE.tagAlign.gz
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/AR1.SE.tagAlign.gz
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/AR2.SE.tagAlign.gz
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/FOXA1_0.SE.tagAlign.gz
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/FOXA1_1.SE.tagAlign.gz

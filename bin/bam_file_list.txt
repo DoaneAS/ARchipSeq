@@ -1,0 +1,7 @@
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/fastq/AR0.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/fastq/AR1.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/fastq/AR2.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/fastq/FOXA1_0.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/fastq/FOXA1_1.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/fastq/input0.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/fastq/input1.bam
