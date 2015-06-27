@@ -1,0 +1,30 @@
+{
+    "references": {
+        "genome": "genome.fasta"
+    },
+
+    "bt2_references": {
+        "genome": "reference/genome"
+    },
+
+    "samples": {
+        "reads_1": ["reads_1"],
+        "reads_2": ["reads_2"]
+    },
+    "units": {
+        "reads_1": ["reads/reads_1.fq"],
+        "reads_2": ["reads/reads_2.fq"]
+    },
+    "known_variants": {
+        "dbsnp": "dbsnp.vcf",
+        "hapmap": "hapmap.vcf",
+        "g1k": "g1k.vcf",
+        "omni": "omni.vcf",
+        "mills": "mills.vcf"
+    },
+    "platform": "Illumina",
+    "params_bwa_mem": "",
+    "params_bt2": "",
+    "heterozygosity": 0.001,
+    "indel_heterozygosity": 1.25E-4
+}
