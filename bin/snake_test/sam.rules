@@ -1,0 +1,107 @@
+# vim: syntax=python tabstop=4 expandtab
+# coding: utf-8
+
+
+"""
+Rules for modifying SAM or BAM files.
+Need samtools and picard-tools in your path.
+
+For usage, include this in your workflow.
+"""
+
+
+__author__ = "Johannes Köster (http://johanneskoester.bitbucket.org)"
+__license__ = "MIT"
+
+
+rule bam_index:
+    input:
+        "{prefix}.bam"
+    output:
+        "{prefix}.bam.bai"
+    shell:
+        "samtools index {input}"
+
+
+rule bam_sort:
+    input:
+        "{prefix}.bam"
+    output:
+        "{prefix}.sorted.bam"
+    shell:
+        "samtools sort {input} {wildcards.prefix}.sorted"
+
+
+rule bam_sort_name:
+    input:
+        "{prefix}.bam"
+    output:
+        "{prefix}.namesorted.bam"
+    shell:
+        "samtools sort -n {input} {wildcards.prefix}.namesorted"
+
+
+rule sam_to_bam:
+    input:
+        "{prefix}.sam"
+    output:
+        "{prefix}.bam"
+    shell:
+        "samtools view -Sbh {input} > {output}"
+
+
+rule bam_stats:
+    input:
+        "{prefix}.bam"
+    output:
+        "{prefix}.stats.txt"
+    shell:
+        "samtools idxstats {input} > {output}"
+
+
+rule bam_measure_insert_size:
+    input:
+        "{prefix}.sorted.bam"
+    output:
+        txt="{prefix}.insert_size.txt",
+        pdf="{prefix}.insert_size_histogram.pdf"
+    shell:
+        "picard-tools CollectInsertSizeMetrics INPUT={input} "
+        "OUTPUT={output.txt} HISTOGRAM_FILE={output.pdf}"
+
+
+rule fasta_index:
+    input:
+        "{prefix}.{suffix}"
+    output:
+        "{prefix}.{suffix,(fasta|fa)}.fai"
+    shell:
+        "samtools faidx {input}"
+
+
+rule fasta_dict:
+    input:
+        "{prefix}.fasta"
+    output:
+        "{prefix}.dict"
+    shell:
+        "picard-tools CreateSequenceDictionary REFERENCE={input} "
+        "OUTPUT={output}"
+
+
+rule sample_merge:
+    """
+    Merge bam files for multiple units into one for the given sample.
+    If the sample has only one unit, a symlink will be created.
+    """
+    input:
+        lambda wildcards: expand(
+            "mapping/{reference}/units/{unit}.bam",
+            unit=config["samples"][wildcards.sample])
+    output:
+        "mapping/{reference}/samples/{sample}.bam"
+    run:
+        if len(input) > 1:
+            shell("samtools merge {output} {input}")
+        else:
+            shell("ln -s {input} {output} && touch -h {output}")

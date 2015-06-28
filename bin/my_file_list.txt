@@ -1,5 +1,6 @@
-/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/AR0.SE.tagAlign.gz
-/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/AR1.SE.tagAlign.gz
-/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/AR2.SE.tagAlign.gz
-/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/FOXA1_0.SE.tagAlign.gz
-/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks/FOXA1_1.SE.tagAlign.gz
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/mapped/SRR776488.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/mapped/SRR776489.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/mapped/SRR776490.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/mapped/SRR776491.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/mapped/SRR776492.bam
+/ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/mapped/SRR776493.bam

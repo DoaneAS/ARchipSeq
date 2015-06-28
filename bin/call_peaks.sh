@@ -1,10 +1,10 @@
 #!/bin/sh
 source ~/.bash_profile
 
-cd /ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/peaks
+cd /ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/mapped
 
 #pool input
-zcat input0.SE.tagAlign.gz input1.SE.tagAlign.gz | gzip -c > inputAll.SE.tagAlign.gz
+
 
 # #without -x=-500:85
 # #working##
@@ -13,11 +13,12 @@ zcat input0.SE.tagAlign.gz input1.SE.tagAlign.gz | gzip -c > inputAll.SE.tagAlig
 # Rscript /home/doanea/tools/spp_package/run_spp.R -p=12 -c=AR0.SE.tagAlign.gz -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=peaks/reps -savr -savp -rf -out=stats/ARpeakStats.tab
 
 #with input var
-Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${1} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
-Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${2} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
-Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${3} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
-Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${4} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/FOXA1peakStats.tab
-Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${5} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/FOXA1peakStats.tab
+Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${1} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
+Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${2} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
+Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${3} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
+Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${4} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/FOXA1peakStats.tab
+Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${5} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf
+Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${6} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/FOXA1peakStats.tab
 #Rscript /home/doanea/tools/spp_package/run_spp.R -p=12 -c=${6} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf -out=stats/ARpeakStats.tab
 #Rscript /home/doanea/tools/spp_package/run_spp.R -p=12 -c=${7} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf -out=stats/ARpeakStats.tab
 
