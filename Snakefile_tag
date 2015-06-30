@@ -14,6 +14,7 @@ MAP_IM_OUT="map-intermediate-out"
 CLASS_AR = SAMPLES[:2]
 CLASS_FX = SAMPLES[:5]
 CLASS_INPUT = SAMPLES[3:4]
+CLASS_CHP = CLASS_AR + CLASS_FX
 
 CLASS_INPUT_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_INPUT)
 # # path to bam files
@@ -23,21 +24,21 @@ CLASS_INPUT_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_INPUT
 
 rule all:
     #input: expand("{sample}.sorted.bam", sample=SAMPLES)
-    input: expand("data/mapped2/{sample}.tagAlign.gz", sample=SAMPLES),
-            'input_all.tagAlign.gz'
-    #input: expand("{sample}_V_control_peaks.narrowPeak", sample=SAMPLES, control=CONTROL)
+    # input: expand("data/mapped2/{sample}.tagAlign.gz", sample=SAMPLES),
+    #         'input_all.tagAlign.gz'
+    input: expand("{sample}_V_control_peaks.narrowPeak", sample=CLASS_CHP)
 
-# rule macs2:
-#     input: chp='{sample}.tagAlign.gz'
-#     output: "{sample}_V_control_peaks.narrowPeak"
-#     shell:
-#         """
-#         py2.7 macs2 callpeak -t {input} -c C1.SE.tagAlign.gz -f BED -n {input}_V_control -g hs -p 1e-2 --to-large --nomodel --extsize 58
-#         """
+rule macs2:
+    input: chp='data/mapped2/{sample}.tagAlign.gz', ct='data/mapped2/input_all.tagAlign.gz'
+    output: "{sample}_V_control_peaks.narrowPeak"
+    shell:
+        """
+        macs2 callpeak -t {input.chp} -c {input.ct} -f BED -n {input.chp}_V_control -g hs -p 1e-2 --to-large
+        """
 
 rule pool_control:
     input: class_cont=CLASS_INPUT_TAG
-    output: 'input_all.tagAlign.gz'
+    output: 'data/mapped2/input_all.tagAlign.gz'
     params: class_cont=','.join(CLASS_INPUT_TAG)
     shell:
         """
