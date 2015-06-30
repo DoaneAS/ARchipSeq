@@ -62,6 +62,22 @@ idr --samples ${F0} ${F1} --peak-list ${FAll} --rank p.value --plot --output-fil
 # idr --samples ${PK0} ${PK2} --rank signal.value --plot
 # idr --samples ${PK1} ${PK2} --rank signal.value --plot
 
+##SRR data set
+MYC
+MYCpr1='/home/doanea/Projects/ARchipSeq/data/peaks/macs2/MYC.pr1_V_INPUT_peaks.regionPeak.gz'
+MYCpr2='/home/doanea/Projects/ARchipSeq/data/peaks/macs2/MYC.pr1_V_INPUT_peaks.regionPeak.gz'
+idr --samples ${MYCpr1} ${MYCpr2} --rank p.value --plot --output-file MYC_pr1_v_pr2_idrValues.txt
+
+AR
+ARpr1='/home/doanea/Projects/ARchipSeq/data/peaks/macs2/AR.pr1_V_INPUT_peaks.narrowPeak'
+ARpr2='/home/doanea/Projects/ARchipSeq/data/peaks/macs2/AR.pr2_V_INPUT_peaks.narrowPeak'
+idr --samples ${ARpr1} ${ARpr2} --rank p.value --plot --output-file AR_pr1_v_pr2_idrValues.txt
+
+
+FXpr1='/home/doanea/Projects/ARchipSeq/data/peaks/macs2/FOXA1.pr1_V_INPUT_peaks.narrowPeak'
+FXpr2='/home/doanea/Projects/ARchipSeq/data/peaks/macs2/FOXA1.pr2_V_INPUT_peaks.narrowPeak'
+idr --samples ${FXpr1} ${FXpr2} --rank p.value --plot --output-file FOXA1_pr1_v_pr2_idrValues.narrowPeak
+
 
 
 ######end python####

@@ -6,22 +6,49 @@ BOWTIE2_INDEXES="/home/doanea/Projects/ARchipSeq/data/hg19/"
 
 #sample names and classes
 #SAMPLES = "t3 t2".split()
+
+
+
+
 SAMPLES = "SRR776488 SRR776489 SRR776490 SRR776491 SRR776492 SRR776493".split()
+#RNA-seq samples
+#SAMPLES = "AR0 AR1".split()
 
+#SAMPLES = "t1 t3".split()
+#SAMPLES = "AR0 AR1 AR2 FOXA1_0 FOXA1_1 input0 input1".split()
+#SAMPLES = list("AR0")
+
+#next TODO build in Rscript spp
 rule all:
-    input: expand("data/mapped/{sample}.bam", sample=SAMPLES)
+    input: expand("data/mapped/{sample}.SE.tagAlign.gz", sample=SAMPLES)
+    #input: "test2.SE.tagAlign.gz", "test1.SE.tagAlign.gz"#, "AR1.SE.tagAlign.gz", "AR2.SE.tagAlign.gz", "FOXA1_0.SE.tagAlign.gz", "FOXA1_1.SE.tagAlign.gz", "input0.SE.tagAlign.gz", "input1.SE.tagAlign.gz"
+    #input: "data/mapped/AR0.bam", "data/mapped/AR1.bam", "data/mapped/AR2.bam",
+    #    "data/mapped/input0.bam", "data/mapped/input1.bam"
 
 
-rule bowtie:
-    input: "data/fastq/{sample}.fastq"
-    #input: "data/fastq/{samples}.fastq"
-    output: "data/mapped/{sample}.bam"
-    threads: 10
-    shell: "bowtie2 -q -p 10 -x /home/doanea/Projects/ARchipSeq/data/hg19/genome {input} | samtools view -bS - > {output}"
-    #shell: "${BT2_HOME}bowtie2 -p 20 -x genome -U {input} -S {output}"
+#Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${1} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
 
+rule bam2tag:
+    input: "data/mapped/{sample}.bam"
+    output: "data/mapped/{sample}.SE.tagAlign.gz"
+    shell: """
+    bin/filtBam.sh {input} > {output}
+    """
 
-
+# rule all:
+#     input: expand("data/mapped/{sample}.bam", sample=SAMPLES)
+#
+#
+# rule bowtie:
+#     input: "data/fastq/{sample}.fastq"
+#     #input: "data/fastq/{samples}.fastq"
+#     output: "data/mapped/{sample}.bam"
+#     threads: 10
+#     shell: "bowtie2 -q -p 10 -x /home/doanea/Projects/ARchipSeq/data/hg19/genome {input} | samtools view -bS - > {output}"
+#     #shell: "${BT2_HOME}bowtie2 -p 20 -x genome -U {input} -S {output}"
+#
+#
+#
 
 
 

@@ -1,0 +1,105 @@
+shell.executable("/bin/bash")
+shell.prefix("source ~/.bash_profile; ")
+REF = "/home/doanea/ARchipSeq/data/hg19/genome"
+BOWTIE2_INDEXES="/home/doanea/Projects/ARchipSeq/data/hg19/"
+
+#sample names and classes
+#SAMPLES = "t3 t2".split()
+#SAMPLES = "SRR776488 SRR776489 SRR776490 SRR776491 SRR776492 SRR776493".split()
+#SAMPLES = "AR0 AR1".split() # AR2 FOXA1_0 FOXA1_1 input0 input1".split()
+#SAMPLES = "AR0test C1".split()
+SAMPLES = "AR0 AR1 AR2 input0 input1 FOXA1_0 FOXA1_1".split()
+CONTROL = ["C1"]
+MAP_IM_OUT="map-intermediate-out"
+CLASS_AR = SAMPLES[:2]
+CLASS_FX = SAMPLES[:5]
+CLASS_INPUT = SAMPLES[3:4]
+
+CLASS_INPUT_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_INPUT)
+# # path to bam files
+# rule all:
+#     input: expand("{sample}.regionPeak", sample=SAMPLES)
+
+
+rule all:
+    #input: expand("{sample}.sorted.bam", sample=SAMPLES)
+    input: expand("data/mapped2/{sample}.tagAlign.gz", sample=SAMPLES),
+            'input_all.tagAlign.gz'
+    #input: expand("{sample}_V_control_peaks.narrowPeak", sample=SAMPLES, control=CONTROL)
+
+# rule macs2:
+#     input: chp='{sample}.tagAlign.gz'
+#     output: "{sample}_V_control_peaks.narrowPeak"
+#     shell:
+#         """
+#         py2.7 macs2 callpeak -t {input} -c C1.SE.tagAlign.gz -f BED -n {input}_V_control -g hs -p 1e-2 --to-large --nomodel --extsize 58
+#         """
+
+rule pool_control:
+    input: class_cont=CLASS_INPUT_TAG
+    output: 'input_all.tagAlign.gz'
+    params: class_cont=','.join(CLASS_INPUT_TAG)
+    shell:
+        """
+        zcat {params.class_cont} | gzip -c > {output}
+        """
+
+rule filt_bam:
+    input: 'data/mapped2/{sample}.bam'
+    output: tagAlign='data/mapped2/{sample}.tagAlign.gz'
+    shell:
+        """
+        bin/filtBam.sh {input} > {output.tagAlign}
+        """
+
+rule bam_sort:
+    input:
+        "data/mapped2/{sample}.bam"
+    output:
+        "data/mapped2/{sample}.sorted.bam"
+    params: srt="data/mapped2/{sample}.sorted"
+    shell:
+        """
+        samtools sort -@ 8 {input} {params.srt}
+        """
+
+rule samtobam:
+    input: "data/mapped2/{sample}.sam"
+    output: "data/mapped2/{sample}.bam"
+    threads: 10
+    log: "data/mapped2/{sample}.bam.sm.log"
+    shell: """
+    samtools view -@ 10 -bS -F 1548 -q 30 {input} > {output}
+    """
+
+rule make_sam:
+    input: "data/fastq/{sample}.fastq.sai"
+    params: fq="data/fastq/{sample}.fastq"
+    output: "data/mapped2/{sample}.sam"
+    threads: 10
+    shell: "bwa samse /home/leslielab/indexes/bwa/hg19/genome.fa {input} {params.fq} > {output}"
+
+# rule bwa:
+#     input: "data/fastq/{sample}.fastq"
+#     #input: "data/fastq/{samples}.fastq"
+#     output: "{sample}.sai"
+#     threads: 10
+#     shell: "bwa aln -t 4 /home/leslielab/indexes/bwa/hg19/genome.fa {input} > {output}"
+#     #"bowtie2 -q -p 10 -x /home/doanea/Projects/ARchipSeq/data/hg19/genome {input} | samtools view -bS - > {output}"
+#     #shell: "${BT2_HOME}bowtie2 -p 20 -x genome -U {input} -S {output}"
+#
+
+    #bwa aln -t 4 /home/leslielab/indexes/bwa/hg19/genome.fa s_3_sequence.txt.gz >  s_3_sequence.txt.bwa
+
+rule aln:
+    input: 'data/fastq/{sample}.fastq' #refbwt="/home/leslielab/indexes/bwa/hg19/genome.fa.bwt", ref="/home/leslielab/indexes/bwa/hg19/genome.fa"
+    params: ref="/home/leslielab/indexes/bwa/hg19/genome.fa"
+    threads: 10
+    output: sai='data/fastq/{sample}.fastq.sai'
+    log: MAP_IM_OUT + "{sample}}.fastq.sai.sm.log"
+    shell: """
+	bwa aln -t {threads} {params.ref} {input}  > {output.sai}
+    """
+
+##run with:
+#snakemake -j 30 --cores 30 --directory /home/doanea/Projects/ARchipSeq/ --snakefile /home/doanea/Projects/ARchipSeq/Snakefile_tag

@@ -1,0 +1,67 @@
+shell.executable("/bin/bash")
+shell.prefix("source ~/.bash_profile; ")
+REF = "/home/doanea/ARchipSeq/data/hg19/genome"
+BOWTIE2_INDEXES="/home/doanea/Projects/ARchipSeq/data/hg19/"
+#SAMPLES = "AR0 AR1 AR2 input0 input1".split()
+
+#sample names and classes
+#SAMPLES = "t3 t2".split()
+
+
+#SAMPLES = "SRR776488 SRR776489 SRR776490 SRR776491 SRR776492 SRR776493".split()
+#SAMPLES = "SRR776488 SRR776489 SRR776490 SRR776491 SRR776492 SRR776493".split()
+CLASS1 = "reads_1 reads_2".split()
+CLASS2 = "reads_2 reads_1".split()
+SAMPLES = CLASS1 + CLASS2
+CLASSES = "class1 class2".split()
+
+CLASS1_FQ = expand('{sample}.fq', sample=CLASS1)
+CLASS2_FQ = expand('{sample}.fq', sample=CLASS2)
+#RNA-seq samples
+#SAMPLES = "AR0 AR1".split()
+
+#SAMPLES = "t1 t3".split()
+#SAMPLES = "AR0 AR1 AR2 FOXA1_0 FOXA1_1 input0 input1".split()
+#SAMPLES = list("AR0")
+
+#next TODO build in Rscript spp
+rule all:
+    input: expand("{class}/accepted_hits.bam", class=CLASSES)
+    #input: "test2.SE.tagAlign.gz", "test1.SE.tagAlign.gz"#, "AR1.SE.tagAlign.gz", "AR2.SE.tagAlign.gz", "FOXA1_0.SE.tagAlign.gz", "FOXA1_1.SE.tagAlign.gz", "input0.SE.tagAlign.gz", "input1.SE.tagAlign.gz"
+    #input: "data/mapped/AR0.bam", "data/mapped/AR1.bam", "data/mapped/AR2.bam",
+    #    "data/mapped/input0.bam", "data/mapped/input1.bam"
+
+
+#Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${1} -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
+
+rule run_tophat:
+    input:
+        class1=CLASS1_FQ,
+        class2=CLASS2_FQ,
+        ref="test_ref"
+    output:
+        '{class}/accepted_hits.bam'
+    params:
+        class1=",".join(CLASS1_FQ),
+        class2=",".join(CLASS2_FQ)
+
+
+
+    # params: ref="test_ref"
+    # output: "{sample}/accepted_hits.bam"
+    # threads: 2
+    # shell:
+    #     """
+    #     tophat -p 2 -o {sample} /home/doanea/ARchipSeq/data/hg19/genome {input}
+    #     """
+
+
+# rule run_tophat:
+#     input: expand("{sample}.fq", sample=SAMPLES)
+#     params: ref="test_ref"
+#     output: "{sample}/accepted_hits.bam"
+#     threads: 2
+#     shell:
+#         """
+#         tophat -p 2 -o {sample} /home/doanea/ARchipSeq/data/hg19/genome {input}
+#         """

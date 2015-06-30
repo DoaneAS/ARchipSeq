@@ -14,6 +14,8 @@ cd /ifs/e63data/leslielab/doanea/Projects/ARchipSeq/data/mapped
 
 #with input var
 Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${1} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
+
+Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${1} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
 # Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${2} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
 # Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${3} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/ARpeakStats.tab
 # Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${4} -i=SRR776493.SE.tagAlign.gz -npeak=300000 -odir=reps -savr -savp -rf #-out=stats/FOXA1peakStats.tab
@@ -38,3 +40,6 @@ Rscript /home/doanea/tools/spp_package/run_spp.R -p=24 -c=${1} -i=SRR776493.SE.t
 # zcat AR0.SE.tagAlign.gz AR1.SE.tagAlign.gz AR2.SE.tagAlign.gz | gzip -c > AR_all.SE.tagAlign.gz
 # #cal peaks on poled chipseq data
 # Rscript /home/doanea/tools/spp_package/run_spp.R -p=12 -c=AR_all.SE.tagAlign.gz -i=inputAll.SE.tagAlign.gz -npeak=300000 -odir=peaks/pooled -savr -savp -rf -out=stats/AR_allpeakStats.tab
+
+
+Rscript /home/doanea/tools/spp_package/run_spp.R -p=12 -c=mapped/SRR776488.SE.tagAlign.gz -i=mapped/SRR776493.SE.tagAlign.gz -npeak=300000 -odir=peaks/spp -rf -out=spp_res_SRR76488.txt
