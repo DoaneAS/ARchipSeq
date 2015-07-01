@@ -64,8 +64,8 @@ rule all:
 #         """
 
 rule macs2:
-    input: chp=expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_CHP), ct='data/mapped2/input_all.tagAlign.gz'
-    output: "{sample}.tagAlign.gz_V_control_peaks.narrowPeak"
+    input: chp='data/mapped2/{sample}.tagAlign.gz', ct='data/mapped2/input_all.tagAlign.gz'
+    output: "data/mapped2/{sample}.tagAlign.gz_V_control_peaks.narrowPeak"
     params: names='{sample}.tagAlign.gz'
     shell:
         """
