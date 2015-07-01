@@ -8,15 +8,15 @@ BOWTIE2_INDEXES="/home/doanea/Projects/ARchipSeq/data/hg19/"
 #SAMPLES = "SRR776488 SRR776489 SRR776490 SRR776491 SRR776492 SRR776493".split()
 #SAMPLES = "AR0 AR1".split() # AR2 FOXA1_0 FOXA1_1 input0 input1".split()
 #SAMPLES = "AR0test C1".split()
-SAMPLES = "AR0 AR1 AR2 input0 input1 FOXA1_0 FOXA1_1".split()
+SAMPLES = "AR0 AR1 AR2 FOXA1_0 FOXA1_1 input0 input1".split()
 CONTROL = ["C1"]
 MAP_IM_OUT="map-intermediate-out"
 CLASS_AR = SAMPLES[:2]
-CLASS_FX = SAMPLES[:5]
-CLASS_INPUT = SAMPLES[3:4]
-CLASS_CHP = CLASS_AR + CLASS_FX
+CLASS_FX = SAMPLES[3:4]
+CLASS_INPUT = SAMPLES[5:6]
+CLASS_CHP = SAMPLES[0:4]
 
-CLASS_CHP_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_CHP)
+CLASS_CHP_TAG = expand('~/Projects/ARchipSeq/data/mapped2/{sample}.tagAlign.gz', sample=CLASS_CHP)
 CLASS_INPUT_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_INPUT)
 # # path to bam files
 # rule all:
@@ -25,8 +25,8 @@ CLASS_INPUT_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_INPUT
 
 rule all:
     #input: expand("data/IDR/{sample}.macs2.filt.peaks.narrowPeak.gz", sample=CLASS_CHP)
-    #input: expand("{sample}_V_control_peaks.narrowPeak", sample=CLASS_CHP)
-    input: expand("data/mapped2/{sample}.tagAlign.gz", sample=CLASS_CHP)
+    input: expand("data/mapped2/{sample}.tagAlign.gz_V_control_peaks.narrowPeak", sample=CLASS_FX)
+    #input: expand("data/mapped2/{sample}.tagAlign.gz", sample=CLASS_CHP)
 
 # rule filter_macs2:
 #     input: "data/macs2/{sample}.tagAlign.gz_V_control_peaks.narrowPeak"
@@ -49,14 +49,27 @@ rule all:
 #     shell:
 #         """
 #         macs2 callpeak -t {input.chp} -c data/mapped2/input_all.tagAlign.gz -f BED -n {sample}_V_control -g hs -p 1e-2 --to-large --outdir /home/doanea/ARchipSeq/data/mapped2
+#
+#         """
+#    input: chp='data/mapped2/{sample}.tagAlign.gz', ct='data/mapped2/input_all.tagAlign.gz'
+
+# rule macs2:
+#     #input: chp= CLASS_CHP, ct='data/mapped2/input_all.tagAlign.gz'
+#     input: chp=CLASS_CHP_TAG, ct='data/mapped2/input_all.tagAlign.gz'
+#     params: chip_sam=CLASS_CHP
+#     output: "{params.chip_sam}.tagAlign.gz_V_control_peaks.narrowPeak"
+#     shell:
+#         """
+#         macs2 callpeak -t '{input.chp}.tagAlign.gz -c {input.ct} -f BED -n {params.chip_sam}_V_control -g hs -p 1e-2 --to-large --outdir data/mapped2/
 #         """
 
 rule macs2:
-    input: chp= CLASS_CHP, ct='data/mapped2/input_all.tagAlign.gz'
-    output: "{input.chp}_V_control_peaks.narrowPeak"
+    input: chp=expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_CHP), ct='data/mapped2/input_all.tagAlign.gz'
+    output: "{sample}.tagAlign.gz_V_control_peaks.narrowPeak"
+    params: names='{sample}.tagAlign.gz'
     shell:
         """
-        macs2 callpeak -t {input.chp} -c {input.ct} -f BED -n {input.chp}_V_control -g hs -p 1e-2 --to-large --outdir data/macs2/
+        macs2 callpeak -t {input.chp} -c {input.ct} -f BED -n {params.names}_V_control -g hs -p 1e-2 --to-large
         """
 
 rule pool_control:
