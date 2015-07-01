@@ -24,9 +24,17 @@ CLASS_INPUT_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_INPUT
 
 
 rule all:
-    #input: expand("data/IDR/{sample}.macs2.filt.peaks.narrowPeak.gz", sample=CLASS_CHP)
-    input: expand("data/mapped2/{sample}.tagAlign.gz_V_control_peaks.narrowPeak", sample=CLASS_CHP)
+    #input: expand("data/IDR/{sample}.peaks.narrowPeak", sample=CLASS_CHP)
+    input: expand("data/IDR/{sample}.peaks.filter.narrowPeak", sample=CLASS_CHP)
+    #input: expand("data/mapped2/{sample}.tagAlign.gz_V_control_peaks.narrowPeak", sample=CLASS_CHP)
     #input: expand("data/mapped2/{sample}.tagAlign.gz", sample=CLASS_CHP)
+
+rule cpp:
+    input: "data/mapped2/{CLASS_CHP}.tagAlign.gz_V_control_peaks.narrowPeak"
+    output: "data/IDR/{CLASS_CHP}.peaks.filter.narrowPeak"
+    shell:
+        """sort -k 8nr,8nr {input} | head -n 100000 > {output}
+        """
 
 # rule filter_macs2:
 #     input: "data/macs2/{sample}.tagAlign.gz_V_control_peaks.narrowPeak"
