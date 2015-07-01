@@ -8,13 +8,13 @@ BOWTIE2_INDEXES="/home/doanea/Projects/ARchipSeq/data/hg19/"
 #SAMPLES = "SRR776488 SRR776489 SRR776490 SRR776491 SRR776492 SRR776493".split()
 #SAMPLES = "AR0 AR1".split() # AR2 FOXA1_0 FOXA1_1 input0 input1".split()
 #SAMPLES = "AR0test C1".split()
-SAMPLES = "AR0 AR1 AR2 FOXA1_0 FOXA1_1 input0 input1".split()
+SAMPLES = "AR0 AR1 AR2 FOXA1_1 FOXA1_0 input0 input1".split()
 CONTROL = ["C1"]
 MAP_IM_OUT="map-intermediate-out"
 CLASS_AR = SAMPLES[:2]
 CLASS_FX = SAMPLES[3:4]
 CLASS_INPUT = SAMPLES[5:6]
-CLASS_CHP = SAMPLES[0:4]
+CLASS_CHP = SAMPLES[0:5]
 
 CLASS_CHP_TAG = expand('~/Projects/ARchipSeq/data/mapped2/{sample}.tagAlign.gz', sample=CLASS_CHP)
 CLASS_INPUT_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_INPUT)
@@ -25,7 +25,7 @@ CLASS_INPUT_TAG = expand('data/mapped2/{sample}.tagAlign.gz', sample=CLASS_INPUT
 
 rule all:
     #input: expand("data/IDR/{sample}.macs2.filt.peaks.narrowPeak.gz", sample=CLASS_CHP)
-    input: expand("data/mapped2/{sample}.tagAlign.gz_V_control_peaks.narrowPeak", sample=CLASS_FX)
+    input: expand("data/mapped2/{sample}.tagAlign.gz_V_control_peaks.narrowPeak", sample=CLASS_CHP)
     #input: expand("data/mapped2/{sample}.tagAlign.gz", sample=CLASS_CHP)
 
 # rule filter_macs2:
@@ -69,7 +69,7 @@ rule macs2:
     params: names='{sample}.tagAlign.gz'
     shell:
         """
-        macs2 callpeak -t {input.chp} -c {input.ct} -f BED -n {params.names}_V_control -g hs -p 1e-2 --to-large
+        macs2 callpeak -t {input.chp} -c {input.ct} -f BED -n {params.names}_V_control -g hs -p 1e-2 --to-large --outdir data/mapped2 #need to put od
         """
 
 rule pool_control:
